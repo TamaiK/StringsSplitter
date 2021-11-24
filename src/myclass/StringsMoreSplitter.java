@@ -14,6 +14,8 @@ public class StringsMoreSplitter extends StringsSplitter {
         return splittedLines;
     }
 
+    // オーバーライド関数
+
     @Override
     protected int getSplitCharIndex(String inpuString, int beginIndex) {
 
@@ -28,10 +30,6 @@ public class StringsMoreSplitter extends StringsSplitter {
 
         nextEndIndex = nextPeriod + NEXT_INDEX;
         return nextEndIndex;
-    }
-
-    protected final boolean isFasterBreakCode(int nextBreakCode, int nextPeriod) {
-        return nextBreakCode < nextPeriod;
     }
 
     @Override
@@ -57,6 +55,12 @@ public class StringsMoreSplitter extends StringsSplitter {
         }
 
         return nextStart;
+    }
+
+    // 追加関数
+
+    protected final boolean isFasterBreakCode(int nextBreakCode, int nextPeriod) {
+        return nextBreakCode < nextPeriod;
     }
 
     protected final boolean isPeriodBreak(int endIndex, String inpuString) {

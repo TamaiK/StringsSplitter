@@ -89,7 +89,7 @@ public class StringsSplitterBase {
         return index2;
     }
 
-    //
+    // オーバーライド関数
 
     protected int getSplitCharIndex(String inpuString, int beginIndex){
 

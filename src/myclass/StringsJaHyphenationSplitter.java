@@ -14,6 +14,8 @@ public class StringsJaHyphenationSplitter extends StringsFixedLengthSplitter {
         return splittedLines;
     }
 
+    // オーバーライド関数
+
     @Override
     protected int getFixedLengthSplitIndex(String inpuString, int beginIndex, int fixedLength) {
 
@@ -29,6 +31,8 @@ public class StringsJaHyphenationSplitter extends StringsFixedLengthSplitter {
 
         return splitIndex;
     }
+
+    // 追加関数
 
     protected boolean isJaHyphenation(int splitIndex, String inpuString) {
 

@@ -12,6 +12,8 @@ public class StringsFixedLengthSplitter extends StringsMoreSplitter {
         return splittedLines;
     }
 
+    // オーバーライド関数
+
     @Override
     protected int getFixedLengthSplitIndex(String inpuString, int beginIndex, int fixedLength) {
         return beginIndex + fixedLength;

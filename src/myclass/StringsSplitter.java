@@ -16,6 +16,8 @@ public class StringsSplitter extends StringsSplitterBase {
         return splittedLines;
     }
 
+    // オーバーライド関数
+
     @Override
     protected int getSplitCharIndex(String inpuString, int beginIndex) {
         return getCharIndex(inpuString, CHAR_BREAKCODE, beginIndex);
