@@ -9,7 +9,6 @@ public class StringsMoreSplitter extends StringsSplitter {
     public static List<String> splitWithLineBreakCodeAndPeriod(String inpuString) {
 
         StringsMoreSplitter stringsSplitter = new StringsMoreSplitter();
-
         List<String> splittedLines = stringsSplitter.splitWithLine(inpuString);
 
         return splittedLines;
@@ -69,9 +68,5 @@ public class StringsMoreSplitter extends StringsSplitter {
         }
 
         return getChar(inpuString, beforeIndex) == CHAR_PERIOD;
-    }
-
-    protected final char getChar(String inpuString, int endIndex) {
-        return inpuString.charAt(endIndex);
     }
 }
