@@ -1,17 +1,29 @@
 package myclass;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class StringsSplitter extends StringsSplitterBase {
+public class StringsSplitter implements IStringsSplitter {
 
     // 定数
 
     protected static final char CHAR_BREAKCODE = '\n';
 
-    public static List<String> splitWithLineBreakCode(String inpuString) {
+    public List<String> split(String splitString) {
 
-        StringsSplitter stringsSplitter = new StringsSplitter();
-        List<String> splittedLines = stringsSplitter.splitWithLine(inpuString);
+        List<String> splittedLines = new ArrayList<>();
+
+        int beginIndex = 0;
+        int endIndex = 0;
+        while (!IStringsSplitter.isReadEnd(beginIndex)) {
+
+            endIndex = getSplitIndex(splitString, beginIndex);
+
+            String splitLine = getSplitLine(splitString, beginIndex, endIndex);
+            splittedLines.add(splitLine);
+
+            beginIndex = getNextStartIndex(endIndex, splitString);
+        }
 
         return splittedLines;
     }
@@ -19,18 +31,23 @@ public class StringsSplitter extends StringsSplitterBase {
     // オーバーライド関数
 
     @Override
-    protected int getSplitCharIndex(String inpuString, int beginIndex) {
-        return getCharIndex(inpuString, CHAR_BREAKCODE, beginIndex);
-    }
+    public int getSplitIndex(String splitString, int beginIndex) {
 
-    @Override
-    protected int getNextStartIndex(int endIndex, String inpuString) {
-
-        if (isReadEnd(endIndex)) {
+        if (isOverIndex(beginIndex, splitString)) {
             return READ_ENDED;
         }
 
-        if (isOverIndex(endIndex, inpuString)) {
+        return getCharIndex(splitString, CHAR_BREAKCODE, beginIndex);
+    }
+
+    @Override
+    public int getNextStartIndex(int endIndex, String splitString) {
+
+        if (IStringsSplitter.isReadEnd(endIndex)) {
+            return READ_ENDED;
+        }
+
+        if (isOverIndex(endIndex, splitString)) {
             return READ_ENDED;
         }
 

@@ -1,27 +1,43 @@
 package myclass;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class StringsMoreSplitter extends StringsSplitter {
-    
+public class StringsMoreSplitter implements IStringsSplitter {
+
+    protected static final char CHAR_BREAKCODE = '\n';
     protected static final char CHAR_PERIOD = '。';
 
-    public static List<String> splitWithLineBreakCodeAndPeriod(String inpuString) {
+    @Override
+    public List<String> split(String splitString) {
 
-        StringsMoreSplitter stringsSplitter = new StringsMoreSplitter();
-        List<String> splittedLines = stringsSplitter.splitWithLine(inpuString);
+        List<String> splittedLines = new ArrayList<>();
+
+        int beginIndex = 0;
+        int endIndex = 0;
+        while (!IStringsSplitter.isReadEnd(beginIndex)) {
+
+            endIndex = getSplitIndex(splitString, beginIndex);
+
+            String splitLine = getSplitLine(splitString, beginIndex, endIndex);
+            splittedLines.add(splitLine);
+
+            beginIndex = getNextStartIndex(endIndex, splitString);
+        }
 
         return splittedLines;
     }
 
-    // オーバーライド関数
-
     @Override
-    protected int getSplitCharIndex(String inpuString, int beginIndex) {
+    public int getSplitIndex(String splitString, int beginIndex) {
+
+        if (isOverIndex(beginIndex, splitString)) {
+            return READ_ENDED;
+        }
 
         int nextEndIndex;
-        int nextBreakCode = getCharIndex(inpuString, CHAR_BREAKCODE, beginIndex);
-        int nextPeriod = getCharIndex(inpuString, CHAR_PERIOD, beginIndex);
+        int nextBreakCode = getCharIndex(splitString, CHAR_BREAKCODE, beginIndex);
+        int nextPeriod = getCharIndex(splitString, CHAR_PERIOD, beginIndex);
 
         if (isFasterBreakCode(nextBreakCode, nextPeriod)) {
             nextEndIndex = nextBreakCode;
@@ -33,24 +49,24 @@ public class StringsMoreSplitter extends StringsSplitter {
     }
 
     @Override
-    protected int getNextStartIndex(int endIndex, String inpuString) {
+    public int getNextStartIndex(int endIndex, String splitString) {
 
-        if (isReadEnd(endIndex)) {
+        if (IStringsSplitter.isReadEnd(endIndex)) {
             return READ_ENDED;
         }
 
         int nextStart = endIndex;
 
-        if (isOverIndex(endIndex, inpuString)) {
+        if (isOverIndex(endIndex, splitString)) {
 
-            if(isPeriodBreak(endIndex, inpuString)){
+            if (isPeriodBreak(endIndex, splitString)) {
                 return nextStart;
             }
 
             return READ_ENDED;
         }
 
-        if (getChar(inpuString, endIndex) == CHAR_BREAKCODE) {
+        if (getChar(splitString, endIndex) == CHAR_BREAKCODE) {
             nextStart += NEXT_INDEX;
         }
 
@@ -63,14 +79,14 @@ public class StringsMoreSplitter extends StringsSplitter {
         return nextBreakCode < nextPeriod;
     }
 
-    protected final boolean isPeriodBreak(int endIndex, String inpuString) {
+    protected final boolean isPeriodBreak(int endIndex, String splitString) {
 
         int beforeIndex = endIndex - NEXT_INDEX;
 
-        if (isOverIndex(beforeIndex, inpuString)) {
+        if (isOverIndex(beforeIndex, splitString)) {
             return false;
         }
 
-        return getChar(inpuString, beforeIndex) == CHAR_PERIOD;
+        return getChar(splitString, beforeIndex) == CHAR_PERIOD;
     }
 }
