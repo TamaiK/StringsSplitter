@@ -5,8 +5,7 @@ import java.util.List;
 
 public class StringsFixedLengthSplitter implements IStringsSplitterExtendFixedLength {
 
-    protected static final char CHAR_BREAKCODE = '\n';
-    protected static final char CHAR_PERIOD = '。';
+    private static StringsMoreSplitter splitter;
 
     @Override
     public List<String> split(String splitString) {
@@ -16,6 +15,8 @@ public class StringsFixedLengthSplitter implements IStringsSplitterExtendFixedLe
 
     @Override
     public List<String> split(String splitString, int fixedLength) {
+
+        splitter = new StringsMoreSplitter();
 
         List<String> splittedLines = new ArrayList<>();
 
@@ -80,9 +81,28 @@ public class StringsFixedLengthSplitter implements IStringsSplitterExtendFixedLe
         return nextStart;
     }
 
-    // 追加関数
+    @Override
+    public String getSplitLine(String splitString, int beginIndex, int endIndex) {
+        return splitter.getSplitLine(splitString, beginIndex, endIndex);
+    }
 
-    protected int getSplitCharIndex(String splitString, int beginIndex) {
+    @Override
+    public boolean isOverIndex(int index, String splitString) {
+        return splitter.isOverIndex(index, splitString);
+    }
+
+    @Override
+    public char getChar(String splitString, int endIndex) {
+        return splitter.getChar(splitString, endIndex);
+    }
+
+    @Override
+    public int getCharIndex(String splitString, char splitChar, int index) {
+        return splitter.getCharIndex(splitString, splitChar, index);
+    }
+
+    @Override
+    public int getSplitCharIndex(String splitString, int beginIndex) {
 
         int charSplitIndex;
         int nextBreakCode = getCharIndex(splitString, CHAR_BREAKCODE, beginIndex);
@@ -97,7 +117,8 @@ public class StringsFixedLengthSplitter implements IStringsSplitterExtendFixedLe
         return charSplitIndex;
     }
 
-    protected int getFixedLengthSplitIndex(String splitString, int beginIndex, int fixedLength) {
+    @Override
+    public int getFixedLengthSplitIndex(String splitString, int beginIndex, int fixedLength) {
 
         int splitIndex = beginIndex + fixedLength;
 
@@ -108,18 +129,23 @@ public class StringsFixedLengthSplitter implements IStringsSplitterExtendFixedLe
         return splitIndex;
     }
 
-    protected final boolean isFasterBreakCode(int nextBreakCode, int nextPeriod) {
-        return nextBreakCode < nextPeriod;
-    }
+    @Override
+    public int getFasterIndex(int index1, int index2) {
 
-    protected final boolean isPeriodBreak(int endIndex, String splitString) {
-
-        int beforeIndex = endIndex - NEXT_INDEX;
-
-        if (isOverIndex(beforeIndex, splitString)) {
-            return false;
+        if (index1 < index2) {
+            return index1;
         }
 
-        return getChar(splitString, beforeIndex) == CHAR_PERIOD;
+        return index2;
+    }
+
+    @Override
+    public boolean isFasterBreakCode(int nextBreakCode, int nextPeriod) {
+        return splitter.isFasterBreakCode(nextBreakCode, nextPeriod);
+    }
+
+    @Override
+    public boolean isPeriodBreak(int endIndex, String splitString) {
+        return splitter.isPeriodBreak(endIndex, splitString);
     }
 }

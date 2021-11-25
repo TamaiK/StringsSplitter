@@ -5,9 +5,7 @@ import java.util.List;
 
 public class StringsJaHyphenationSplitter implements IStringsSplitterExtendFixedLength {
 
-    protected static final char CHAR_BREAKCODE = '\n';
-    protected static final char CHAR_PERIOD = '。';
-    protected static final char CHAR_COMMA = '、';
+    private static StringsFixedLengthSplitter splitter;
 
     @Override
     public List<String> split(String splitString) {
@@ -17,6 +15,8 @@ public class StringsJaHyphenationSplitter implements IStringsSplitterExtendFixed
 
     @Override
     public List<String> split(String splitString, int fixedLength) {
+
+        splitter = new StringsFixedLengthSplitter();
 
         List<String> splittedLines = new ArrayList<>();
 
@@ -81,24 +81,33 @@ public class StringsJaHyphenationSplitter implements IStringsSplitterExtendFixed
         return nextStart;
     }
 
-    // 追加関数
-
-    protected int getSplitCharIndex(String splitString, int beginIndex) {
-
-        int charSplitIndex;
-        int nextBreakCode = getCharIndex(splitString, CHAR_BREAKCODE, beginIndex);
-        int nextPeriod = getCharIndex(splitString, CHAR_PERIOD, beginIndex);
-
-        if (isFasterBreakCode(nextBreakCode, nextPeriod)) {
-            charSplitIndex = nextBreakCode;
-            return nextBreakCode;
-        }
-
-        charSplitIndex = nextPeriod + NEXT_INDEX;
-        return charSplitIndex;
+    @Override
+    public String getSplitLine(String splitString, int beginIndex, int endIndex) {
+        return splitter.getSplitLine(splitString, beginIndex, endIndex);
     }
 
-    protected int getFixedLengthSplitIndex(String splitString, int beginIndex, int fixedLength) {
+    @Override
+    public boolean isOverIndex(int index, String splitString) {
+        return splitter.isOverIndex(index, splitString);
+    }
+
+    @Override
+    public char getChar(String splitString, int endIndex) {
+        return splitter.getChar(splitString, endIndex);
+    }
+
+    @Override
+    public int getCharIndex(String splitString, char splitChar, int index) {
+        return splitter.getCharIndex(splitString, splitChar, index);
+    }
+
+    @Override
+    public int getSplitCharIndex(String splitString, int beginIndex) {
+        return splitter.getSplitCharIndex(splitString, beginIndex);
+    }
+
+    @Override
+    public int getFixedLengthSplitIndex(String splitString, int beginIndex, int fixedLength) {
 
         int splitIndex = beginIndex + fixedLength;
 
@@ -113,22 +122,24 @@ public class StringsJaHyphenationSplitter implements IStringsSplitterExtendFixed
         return splitIndex;
     }
 
-    protected final boolean isFasterBreakCode(int nextBreakCode, int nextPeriod) {
-        return nextBreakCode < nextPeriod;
+    @Override
+    public int getFasterIndex(int index1, int index2) {
+        return splitter.getFasterIndex(index1, index2);
     }
 
-    protected final boolean isPeriodBreak(int endIndex, String splitString) {
-
-        int beforeIndex = endIndex - NEXT_INDEX;
-
-        if (isOverIndex(beforeIndex, splitString)) {
-            return false;
-        }
-
-        return getChar(splitString, beforeIndex) == CHAR_PERIOD;
+    @Override
+    public boolean isFasterBreakCode(int nextBreakCode, int nextPeriod) {
+        return splitter.isFasterBreakCode(nextBreakCode, nextPeriod);
     }
 
-    protected boolean isJaHyphenation(int splitIndex, String splitString) {
+    @Override
+    public boolean isPeriodBreak(int endIndex, String splitString) {
+        return splitter.isPeriodBreak(endIndex, splitString);
+    }
+
+    // 追加関数
+
+    protected final boolean isJaHyphenation(int splitIndex, String splitString) {
 
         char splitChar = splitString.charAt(splitIndex);
 

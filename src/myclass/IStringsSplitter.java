@@ -10,46 +10,28 @@ public interface IStringsSplitter {
 
     public static final String STRING_BLANK = "";
 
+    public static final char CHAR_BREAKCODE = '\n';
+    public static final char CHAR_PERIOD = '。';
+
     // static関数
 
     public static boolean isReadEnd(int splitIndex) {
         return splitIndex <= READ_ENDED;
     }
 
-    // abstract関数
+    // 関数
 
-    abstract List<String> split(String splitString);
+    List<String> split(String splitString);
 
-    abstract int getSplitIndex(String splitString, int beginIndex);
+    int getSplitIndex(String splitString, int beginIndex);
 
-    abstract int getNextStartIndex(int endIndex, String splitString);
+    int getNextStartIndex(int endIndex, String splitString);
 
-    // default関数
+    String getSplitLine(String splitString, int beginIndex, int endIndex);
 
-    default String getSplitLine(String splitString, int beginIndex, int endIndex) {
+    boolean isOverIndex(int index, String splitString);
 
-        if (endIndex == READ_ENDED) {
-            return STRING_BLANK;
-        }
+    char getChar(String splitString, int endIndex);
 
-        return splitString.substring(beginIndex, endIndex);
-    }
-
-    default boolean isOverIndex(int index, String splitString) {
-        return index >= splitString.length();
-    }
-
-    default char getChar(String splitString, int endIndex) {
-        return splitString.charAt(endIndex);
-    }
-
-    default int getCharIndex(String splitString, char splitChar, int index) {
-
-        int splitIndex = splitString.indexOf(splitChar, index);
-        if (splitIndex == MISSING_INDEX) {
-            splitIndex = splitString.length();
-        }
-
-        return splitIndex;
-    }
+    int getCharIndex(String splitString, char splitChar, int index);
 }

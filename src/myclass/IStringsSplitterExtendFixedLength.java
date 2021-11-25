@@ -4,20 +4,19 @@ import java.util.List;
 
 public interface IStringsSplitterExtendFixedLength extends IStringsSplitter {
 
-    // abstract関数
+    public static final char CHAR_COMMA = '、';
 
-    abstract List<String> split(String splitString, int fixedLength);
+    List<String> split(String splitString, int fixedLength);
 
-    abstract int getSplitIndex(String splitString, int beginIndex, int fixedLength);
+    int getSplitIndex(String splitString, int beginIndex, int fixedLength);
 
-    // default関数
+    int getSplitCharIndex(String splitString, int beginIndex);
 
-    default int getFasterIndex(int index1, int index2) {
+    int getFixedLengthSplitIndex(String splitString, int beginIndex, int fixedLength);
 
-        if (index1 < index2) {
-            return index1;
-        }
+    int getFasterIndex(int index1, int index2);
 
-        return index2;
-    }
+    boolean isFasterBreakCode(int nextBreakCode, int nextPeriod);
+
+    boolean isPeriodBreak(int endIndex, String splitString);
 }

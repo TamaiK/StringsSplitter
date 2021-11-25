@@ -5,11 +5,12 @@ import java.util.List;
 
 public class StringsMoreSplitter implements IStringsSplitter {
 
-    protected static final char CHAR_BREAKCODE = '\n';
-    protected static final char CHAR_PERIOD = '。';
+    private static StringsSplitter splitter;
 
     @Override
     public List<String> split(String splitString) {
+
+        splitter = new StringsSplitter();
 
         List<String> splittedLines = new ArrayList<>();
 
@@ -73,13 +74,33 @@ public class StringsMoreSplitter implements IStringsSplitter {
         return nextStart;
     }
 
+    @Override
+    public String getSplitLine(String splitString, int beginIndex, int endIndex) {
+        return splitter.getSplitLine(splitString, beginIndex, endIndex);
+    }
+
+    @Override
+    public boolean isOverIndex(int index, String splitString) {
+        return splitter.isOverIndex(index, splitString);
+    }
+
+    @Override
+    public char getChar(String splitString, int endIndex) {
+        return splitter.getChar(splitString, endIndex);
+    }
+
+    @Override
+    public int getCharIndex(String splitString, char splitChar, int index) {
+        return splitter.getCharIndex(splitString, splitChar, index);
+    }
+
     // 追加関数
 
-    protected final boolean isFasterBreakCode(int nextBreakCode, int nextPeriod) {
+    public final boolean isFasterBreakCode(int nextBreakCode, int nextPeriod) {
         return nextBreakCode < nextPeriod;
     }
 
-    protected final boolean isPeriodBreak(int endIndex, String splitString) {
+    public final boolean isPeriodBreak(int endIndex, String splitString) {
 
         int beforeIndex = endIndex - NEXT_INDEX;
 
